@@ -1,8 +1,11 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["edibleMushroom"] // akashic scan assetした画像ID
+		assetIds: ["edibleMushroom"]
 	});
+
+	// 生成されたキノコを管理するマップ（辞書）
+	const mushroomMap: { [key: number]: g.E } = {};
 
 	scene.onLoad.add(() => {
 		// スコア表示用
@@ -18,32 +21,53 @@ function main() {
 		});
 		scene.append(scoreLabel);
 
-		// キノコを生成する関数
+		// --- メッセージ受信処理 ---
+		scene.onMessage.add(ev => {
+			const data: any = ev.data;
+			if (data && data.type === "hit") {
+				// 自作のマップからキノコを取り出す
+				const target = mushroomMap[data.mushroomId];
+
+				if (target && !target.destroyed()) {
+					target.destroy();
+					// マップからも削除
+					delete mushroomMap[data.mushroomId];
+
+					score += 10;
+					scoreLabel.text = `SCORE: ${score}`;
+					scoreLabel.invalidate();
+				}
+			}
+		});
+
+		// --- キノコ生成関数 ---
 		const createMushroom = () => {
 			const mushroom = new g.Sprite({
 				scene: scene,
 				src: scene.asset.getImageById("edibleMushroom"),
-				x: g.game.random.generate() * (g.game.width - 64), // 画面内にランダム配置
+				x: g.game.random.generate() * (g.game.width - 64),
 				y: g.game.random.generate() * (g.game.height - 64),
 				touchable: true
 			});
 
-			// クリックされた時の処理
+			// 生成したキノコをマップに登録
+			mushroomMap[mushroom.id] = mushroom;
+
 			mushroom.onPointDown.add(() => {
-				// まだシーンに存在していれば（二重クリック防止）
-				if (mushroom.parent) {
-					mushroom.destroy();
-					score += 10;
-					scoreLabel.text = `SCORE: ${score}`;
-					scoreLabel.invalidate(); // 表示を更新
-				}
+				g.game.raiseEvent(new g.MessageEvent({
+					type: "hit",
+					mushroomId: mushroom.id
+				}));
 			});
 
 			scene.append(mushroom);
 
-			// 3秒経ったら自動で消える（早い者勝ち感を出すため）
+			// 3秒経ったら自動で消える
 			scene.setTimeout(() => {
-				if (mushroom.parent) mushroom.destroy();
+				if (!mushroom.destroyed()) {
+					mushroom.destroy();
+					delete mushroomMap[mushroom.id]; // 消えたらマップからも消す
+				}
 			}, 3000);
 		};
 
