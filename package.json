@@ -32,5 +32,8 @@
     "rimraf": "^6.0.0",
     "ts-jest": "^29.0.3",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@akashic-extension/collision-js": "^1.1.0"
   }
 }
