@@ -43,7 +43,7 @@ function main() {
 
 		// メッセージ受信
 		scene.onMessage.add((ev) => {
-			if (ev.data && ev.data.type === "hit" && ev.data.playerId) {
+			if (ev.data !== undefined && ev.data.type === "hit" && ev.data.playerId !== undefined) {
 				const pid = ev.data.playerId;
 
 				// もしプレイヤーがいなければ登録
@@ -52,7 +52,7 @@ function main() {
 				}
 
 				const target = mushroomMap[ev.data.mushroomId];
-				if (target && !target.destroyed()) {
+				if (target !== undefined && target.destroyed() === false) {
 					target.destroy();
 					delete mushroomMap[ev.data.mushroomId];
 
@@ -65,7 +65,7 @@ function main() {
 					scoreLabels[pid].text = `Player ${displayName}: ${scores[pid]}`;
 					scoreLabels[pid].invalidate();
 
-					// 【演出】叩いた瞬間に名前を出す
+					// キノコをクリックしたときにプレイヤー名+獲得ポイントを表示
 					const popup = new g.Label({
 						scene: scene,
 						text: `${displayName} ${point > 0 ? "+" : ""}${point}`,
@@ -76,14 +76,14 @@ function main() {
 						y: target.y
 					});
 					scene.append(popup);
-					scene.setTimeout(() => { if (!popup.destroyed()) popup.destroy(); }, 500);
+					scene.setTimeout(() => { if (popup.destroyed() === false) popup.destroy(); }, 500);
 				}
 			}
 		});
 
 		// キノコ生成
 		const createMushroom = () => {
-			if (!isGameActive) return;
+			if (isGameActive === false) return;
 			const isPoison = g.game.random.generate() < 0.2; // 20%で毒
 			const mushroom = new g.Sprite({
 				scene: scene,
@@ -99,7 +99,7 @@ function main() {
 
 			mushroomMap[mushroom.id] = mushroom;
 			mushroom.onPointDown.add((ev) => {
-				if (!isGameActive) return;
+				if (isGameActive === false) return;
 
 				// 【重要】クリックされたそのキノコ自身の毒フラグを送信する
 				const selfIsPoison = (mushroom as any).isPoison;
@@ -113,7 +113,7 @@ function main() {
 			});
 			scene.append(mushroom);
 			scene.setTimeout(() => {
-				if (!mushroom.destroyed()) {
+				if (mushroom.destroyed() === false) {
 					mushroom.destroy();
 					delete mushroomMap[mushroom.id];
 				}
