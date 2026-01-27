@@ -25,7 +25,7 @@ function main() {
 			scores[pid] = 0;
 			const label = new g.Label({
 				scene: scene,
-				text: `Player ${pid.substring(0, 4)}: 0`,
+				text: `Player ${pid}: 0`,
 				font: font,
 				textColor: (pid === g.game.selfId) ? "green" : "black", // 自分は緑
 				x: 10,
@@ -61,14 +61,13 @@ function main() {
 					scores[pid] += point;
 
 					// ラベル更新
-					const displayName = pid ? pid.substring(0, 4) : "???";
-					scoreLabels[pid].text = `Player ${displayName}: ${scores[pid]}`;
+					scoreLabels[pid].text = `Player ${pid}: ${scores[pid]}`;
 					scoreLabels[pid].invalidate();
 
 					// キノコをクリックしたときにプレイヤー名+獲得ポイントを表示
 					const popup = new g.Label({
 						scene: scene,
-						text: `${displayName} ${point > 0 ? "+" : ""}${point}`,
+						text: `${pid} ${point > 0 ? "+" : ""}${point}`,
 						font: font,
 						fontSize: 20,
 						textColor: ev.data.isPoison ? "red" : "cyan",
@@ -136,7 +135,7 @@ function main() {
 			}
 			const result = new g.Label({
 				scene: scene,
-				text: `FINISH! Winner: ${winnerId.substring(0, 4)}`,
+				text: `FINISH! Winner: ${winnerId}`,
 				font: font,
 				fontSize: 50,
 				textColor: "orange",
