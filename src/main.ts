@@ -92,21 +92,17 @@ function main() {
 				touchable: true,
 			});
 
-			// 【重要】キノコオブジェクト自体にカスタム属性として毒フラグを持たせる
-			// (TypeScriptのエラーが出る場合は (mushroom as any).isPoison = isPoison; と書きます)
+			// キノコオブジェクト自体に毒フラグを持たせる
 			(mushroom as any).isPoison = isPoison;
 
 			mushroomMap[mushroom.id] = mushroom;
 			mushroom.onPointDown.add((ev) => {
 				if (isGameActive === false) return;
 
-				// 【重要】クリックされたそのキノコ自身の毒フラグを送信する
-				const selfIsPoison = (mushroom as any).isPoison;
-
 				g.game.raiseEvent(new g.MessageEvent({
 					type: "hit",
 					mushroomId: mushroom.id,
-					isPoison: selfIsPoison, // その個体が毒だったかを送る
+					isPoison: (mushroom as any).isPoison, // その個体が毒だったかを送る
 					playerId: ev.player.id
 				}));
 			});
