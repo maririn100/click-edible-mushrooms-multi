@@ -121,12 +121,7 @@ function main() {
 		scene.setTimeout(() => {
 			isGameActive = false;
 
-			// スコアデータを [ID, 点数] の配列に変換し、点数が高い順に並び替える
-			const ranking = Object.keys(scores)
-				.map(pid => ({ id: pid, score: scores[pid] }))
-				.sort((a, b) => b.score - a.score);
-
-			// 背景を少し暗くする（演出：半透明の黒い四角形を全画面に置く）
+			// 背景暗転
 			const bg = new g.FilledRect({
 				scene: scene,
 				cssColor: "black",
@@ -136,7 +131,7 @@ function main() {
 			});
 			scene.append(bg);
 
-			// "RESULT" タイトルの表示
+			// 3. "RESULT" タイトルの表示
 			const title = new g.Label({
 				scene: scene,
 				text: "--- RESULT ---",
@@ -148,41 +143,71 @@ function main() {
 			});
 			scene.append(title);
 
-			// 各プレイヤーの順位を表示
-			ranking.forEach((player, index) => {
-				const isMe = (player.id === g.game.selfId);
-				const rowY = 120 + (index * 45); // その行の基準の高さ
+			const ranking = Object.keys(scores)
+				.map(pid => ({ id: pid, score: scores[pid] }))
+				.sort((a, b) => b.score - a.score);
 
-				// 1行分をまとめる透明なコンテナ
-				const rowContainer = new g.E({ scene: scene, x: 100, y: rowY });
+			let displayRank = 1;
+			const topScore = ranking.length > 0 ? ranking[0].score : -Infinity;
+
+			ranking.forEach((player, index) => {
+				// スコアが下がったタイミングで順位を更新（同点なら維持）
+				if (index > 0 && player.score < ranking[index - 1].score) {
+					displayRank = index + 1;
+				}
+
+				const isMe = (player.id === g.game.selfId);
+				const rowY = 120 + (index * 45);
+
+				// --- 行コンテナの作成 ---
+				// この rowContainer を動かすだけで、王冠も名前も一緒に動きます
+				const rowContainer = new g.E({
+					scene: scene,
+					x: 100, // 左端からの位置
+					y: rowY,
+					width: g.game.width - 200,
+					height: 40
+				});
 				scene.append(rowContainer);
 
-				// 王冠（1位の時だけ追加）
-				if (index === 0) {
+				// --- 王冠の表示（1位タイ全員） ---
+				if (player.score === topScore && topScore > 0) {
 					const crown = new g.Label({
 						scene: scene,
 						text: "👑",
 						font: font,
 						fontSize: 30,
-						x: -40, // Containerの左側に出す
-						y: -5   // ここで微調整！
+						x: -40, // コンテナの基準(x:0)よりさらに左に配置
+						y: -5   // 微調整した値
 					});
 					rowContainer.append(crown);
 				}
 
-				// 順位・名前・スコアのテキスト
+				// --- 順位と名前のラベル ---
 				const rankLabel = new g.Label({
 					scene: scene,
-					text: `${index + 1}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
+					text: `${displayRank}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
 					font: font,
 					fontSize: 30,
 					textColor: isMe ? "green" : "white",
-					x: 0,
-					y: 0 // コンテナの基準点に合わせる
+					x: 0, // コンテナ内での相対座標
+					y: 0
 				});
 				rowContainer.append(rankLabel);
 			});
 
+			if (ranking.length === 0) {
+				const noPlayerLabel = new g.Label({
+					scene: scene,
+					text: "参加者がいませんでした",
+					font: font,
+					fontSize: 24,
+					textColor: "white",
+					x: 100,
+					y: 120
+				});
+				scene.append(noPlayerLabel);
+			}
 		}, 30000);
 	});
 
