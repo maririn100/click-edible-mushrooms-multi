@@ -3,34 +3,33 @@ function main() {
 		game: g.game,
 		assetIds: ["edibleMushroom", "poisonousMushroom"]
 	});
+
 	scene.onLoad.add(() => {
-		// 1. シーン共通で使う変数（スコア、マップ、制限時間など）の定義
 		const scores: { [key: string]: number } = {};
 		const scoreLabels: { [key: string]: g.Label } = {};
-		// 生成されたキノコを管理するマップ（辞書）
+		// 生成されたキノコの管理用
 		const mushroomMap: { [key: number]: g.E } = {};
-		let isGameActive = true; // 制限時間終了後に操作不能にするためのフラグ
-
+		// 制限時間終了後に操作不能にするためのフラグ
+		let isGameActive = true;
 		const font = new g.DynamicFont({
 			game: g.game,
 			fontFamily: "sans-serif",
 			size: 24
 		});
 
-		// プレイヤー情報を登録し、ラベルを作る共通関数
-		const registerPlayer = (pid: string | null | undefined) => {
-			// pidがない、または既に登録済み、または4人以上の場合は何もしない
-			if (!pid || scores[pid] !== undefined || Object.keys(scores).length >= 4) return;
+		// プレイヤー登録（スコアラベル作成）
+		const registerPlayer = (pid: string) => {
+			// 既に登録済み、また4人以上の場合は何もしない
+			if (scores[pid] !== undefined || Object.keys(scores).length >= 4) return;
 
 			scores[pid] = 0;
 			const label = new g.Label({
 				scene: scene,
 				text: `Player ${pid.substring(0, 4)}: 0`,
 				font: font,
-				fontSize: 24,
-				textColor: (pid === g.game.selfId) ? "yellow" : "black", // 自分は黄色
+				textColor: (pid === g.game.selfId) ? "green" : "black", // 自分は緑
 				x: 10,
-				y: 10 + (Object.keys(scores).length * 30)
+				y: 10 + ((Object.keys(scores).length - 1) * 30)
 			});
 			scene.append(label);
 			scoreLabels[pid] = label;
