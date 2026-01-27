@@ -120,25 +120,69 @@ function main() {
 		// 30秒で終了
 		scene.setTimeout(() => {
 			isGameActive = false;
-			// 勝者判定
-			let winnerId = "";
-			let maxScore = -999;
-			for (const id in scores) {
-				if (scores[id] > maxScore) {
-					maxScore = scores[id];
-					winnerId = id;
-				}
-			}
-			const result = new g.Label({
+
+			// スコアデータを [ID, 点数] の配列に変換し、点数が高い順に並び替える
+			const ranking = Object.keys(scores)
+				.map(pid => ({ id: pid, score: scores[pid] }))
+				.sort((a, b) => b.score - a.score);
+
+			// 背景を少し暗くする（演出：半透明の黒い四角形を全画面に置く）
+			const bg = new g.FilledRect({
 				scene: scene,
-				text: `FINISH! Winner: ${winnerId}`,
-				font: font,
-				fontSize: 50,
-				textColor: "orange",
-				x: 100,
-				y: 200
+				cssColor: "black",
+				opacity: 0.7,
+				width: g.game.width,
+				height: g.game.height
 			});
-			scene.append(result);
+			scene.append(bg);
+
+			// "RESULT" タイトルの表示
+			const title = new g.Label({
+				scene: scene,
+				text: "--- RESULT ---",
+				font: font,
+				fontSize: 40,
+				textColor: "yellow",
+				x: (g.game.width - 240) / 2, // 中央寄せ
+				y: 50
+			});
+			scene.append(title);
+
+			// 各プレイヤーの順位を表示
+			ranking.forEach((player, index) => {
+				const isMe = (player.id === g.game.selfId);
+				const rowY = 120 + (index * 45); // その行の基準の高さ
+
+				// 1行分をまとめる透明なコンテナ
+				const rowContainer = new g.E({ scene: scene, x: 100, y: rowY });
+				scene.append(rowContainer);
+
+				// 王冠（1位の時だけ追加）
+				if (index === 0) {
+					const crown = new g.Label({
+						scene: scene,
+						text: "👑",
+						font: font,
+						fontSize: 30,
+						x: -40, // Containerの左側に出す
+						y: -5   // ここで微調整！
+					});
+					rowContainer.append(crown);
+				}
+
+				// 順位・名前・スコアのテキスト
+				const rankLabel = new g.Label({
+					scene: scene,
+					text: `${index + 1}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
+					font: font,
+					fontSize: 30,
+					textColor: isMe ? "green" : "white",
+					x: 0,
+					y: 0 // コンテナの基準点に合わせる
+				});
+				rowContainer.append(rankLabel);
+			});
+
 		}, 30000);
 	});
 
