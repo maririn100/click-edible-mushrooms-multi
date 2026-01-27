@@ -36,30 +36,28 @@ function main() {
 		};
 
 
-		// 2. プレイヤーが参加した時の処理 (onJoin)
-		// --- 参加プレイヤーを4人までに制限する処理 ---
+		// プレイヤー参加時
 		g.game.onJoin.add((ev) => {
 			registerPlayer(ev.player.id);
 		});
 
 		// メッセージ受信
 		scene.onMessage.add((ev) => {
-			const data: any = ev.data;
-			if (data && data.type === "hit" && data.playerId) {
-				const pid = data.playerId;
+			if (ev.data && ev.data.type === "hit" && ev.data.playerId) {
+				const pid = ev.data.playerId;
 
-				// 【重要】もしscoresにこのプレイヤーがいなければその場で登録
+				// もしプレイヤーがいなければ登録
 				if (scores[pid] === undefined) {
 					registerPlayer(pid);
 				}
 
-				const target = mushroomMap[data.mushroomId];
+				const target = mushroomMap[ev.data.mushroomId];
 				if (target && !target.destroyed()) {
 					target.destroy();
-					delete mushroomMap[data.mushroomId];
+					delete mushroomMap[ev.data.mushroomId];
 
 					// スコア加算・減算
-					const point = data.isPoison ? -50 : 10;
+					const point = ev.data.isPoison ? -50 : 10;
 					scores[pid] += point;
 
 					// ラベル更新
@@ -73,7 +71,7 @@ function main() {
 						text: `${displayName} ${point > 0 ? "+" : ""}${point}`,
 						font: font,
 						fontSize: 20,
-						textColor: data.isPoison ? "red" : "cyan",
+						textColor: ev.data.isPoison ? "red" : "cyan",
 						x: target.x,
 						y: target.y
 					});
