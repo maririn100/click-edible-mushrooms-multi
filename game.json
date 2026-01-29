@@ -4,12 +4,6 @@
 	"fps": 30,
 	"main": "./script/main.js",
 	"assets": {
-		"player": {
-			"type": "image",
-			"width": 32,
-			"height": 32,
-			"path": "image/player.png"
-		},
 		"main": {
 			"type": "script",
 			"path": "script/main.js",
@@ -45,29 +39,11 @@
 			"width": 640,
 			"height": 480
 		},
-		"clear": {
-			"type": "image",
-			"path": "image/clear.png",
-			"width": 470,
-			"height": 130
-		},
 		"edibleMushroom": {
 			"type": "image",
 			"path": "image/edibleMushroom.png",
 			"width": 16,
 			"height": 16
-		},
-		"gameover": {
-			"type": "image",
-			"path": "image/gameover.png",
-			"width": 460,
-			"height": 100
-		},
-		"levelup": {
-			"type": "image",
-			"path": "image/levelup.png",
-			"width": 165,
-			"height": 50
 		},
 		"poisonousMushroom": {
 			"type": "image",
@@ -86,6 +62,12 @@
 			"path": "image/start.png",
 			"width": 310,
 			"height": 110
+		},
+		"crown": {
+			"type": "image",
+			"path": "image/crown.png",
+			"width": 800,
+			"height": 800
 		}
 	},
 	"environment": {

@@ -1,7 +1,7 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["background", "edibleMushroom", "poisonousMushroom"]
+		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown"]
 	});
 
 	scene.onLoad.add(() => {
@@ -19,11 +19,12 @@ function main() {
 		});
 
 		// 背景
+		const backgroundSrc = scene.asset.getImageById("background");
 		const background = new g.Sprite({
 			scene: scene,
-			src: scene.asset.getImageById("background"),
-			srcWidth: scene.asset.getImageById("background").width,
-			srcHeight: scene.asset.getImageById("background").height,
+			src: backgroundSrc,
+			srcWidth: backgroundSrc.width,
+			srcHeight: backgroundSrc.height,
 			width: g.game.width,
 			height: g.game.height
 		});
@@ -190,13 +191,16 @@ function main() {
 
 				// 王冠の表示（1位タイ全員）
 				if (player.score === topScore && topScore > 0) {
-					const crown = new g.Label({
+					const crownSrc = scene.asset.getImageById("crown");
+					const crown = new g.Sprite({
 						scene: scene,
-						text: "👑",
-						font,
-						fontSize: 30,
-						x: -40, // コンテナの基準(x:0)よりさらに左に配置
-						y: -5   // 微調整した値
+						src: crownSrc,
+						x: -45, // 位置を微調整（画像の幅に合わせて変えてください）
+						y: 3,  // テキストとの高さ調整
+						srcWidth: crownSrc.width,
+						srcHeight: crownSrc.height,
+						width: 32,  // 表示したい横幅
+						height: 32  // 表示したい縦幅
 					});
 					rowContainer.append(crown);
 				}
