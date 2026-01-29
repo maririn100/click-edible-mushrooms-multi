@@ -96,14 +96,15 @@ function main() {
 			// スコアラベルが並ぶ高さを考慮（10px + 4人分 * 30px + 少しの余裕）
 			const safeZoneHeight = 150;
 			const isPoison = g.game.random.generate() < 0.2; // 20%で毒
+			const mushroomSrc = scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom");
 			const mushroom = new g.Sprite({
 				scene: scene,
-				src: scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom"),
+				src: mushroomSrc,
 				x: g.game.random.generate() * (g.game.width - 64),
 				// y座標をsafeZoneHeight分だけ下にずらし、その分ランダム範囲を狭める
 				y: safeZoneHeight + (g.game.random.generate() * (g.game.height - safeZoneHeight - 64)),
-				srcWidth: scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom").width,
-				srcHeight: scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom").height,
+				srcWidth: mushroomSrc.width,
+				srcHeight: mushroomSrc.height,
 				width: 32,
 				height: 32,
 				touchable: true,
