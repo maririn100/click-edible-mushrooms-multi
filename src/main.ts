@@ -1,7 +1,7 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["edibleMushroom", "poisonousMushroom"]
+		assetIds: ["background", "edibleMushroom", "poisonousMushroom"]
 	});
 
 	scene.onLoad.add(() => {
@@ -11,11 +11,22 @@ function main() {
 		const mushroomMap: { [key: number]: g.E } = {};
 		// 制限時間終了後に操作不能にするためのフラグ
 		let isGameActive = true;
+
 		const font = new g.DynamicFont({
 			game: g.game,
 			fontFamily: "sans-serif",
 			size: 24
 		});
+
+		const background = new g.Sprite({
+			scene: scene,
+			src: scene.asset.getImageById("background"), // game.jsonに登録した背景画像ID
+			srcWidth: scene.asset.getImageById("background").width,
+			srcHeight: scene.asset.getImageById("background").height,
+			width: g.game.width,
+			height: g.game.height
+		});
+		scene.append(background);
 
 		// プレイヤー登録（スコアラベル作成）
 		const registerPlayer = (pid: string) => {
@@ -34,7 +45,6 @@ function main() {
 			scene.append(label);
 			scoreLabels[pid] = label;
 		};
-
 
 		// プレイヤー参加時
 		g.game.onJoin.add((ev) => {
@@ -92,6 +102,10 @@ function main() {
 				x: g.game.random.generate() * (g.game.width - 64),
 				// y座標をsafeZoneHeight分だけ下にずらし、その分ランダム範囲を狭める
 				y: safeZoneHeight + (g.game.random.generate() * (g.game.height - safeZoneHeight - 64)),
+				srcWidth: scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom").width,
+				srcHeight: scene.asset.getImageById(isPoison ? "poisonousMushroom" : "edibleMushroom").height,
+				width: 32,
+				height: 32,
 				touchable: true,
 			});
 
