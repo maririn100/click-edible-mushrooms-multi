@@ -134,10 +134,10 @@ function main() {
 			});
 			scene.append(bg);
 
-			// 3. "RESULT" タイトルの表示
+			// "結果発表" タイトルの表示
 			const title = new g.Label({
 				scene: scene,
-				text: "--- RESULT ---",
+				text: "--- 結果発表 ---",
 				font: font,
 				fontSize: 40,
 				textColor: "yellow",
@@ -162,8 +162,7 @@ function main() {
 				const isMe = (player.id === g.game.selfId);
 				const rowY = 120 + (index * 45);
 
-				// --- 行コンテナの作成 ---
-				// この rowContainer を動かすだけで、王冠も名前も一緒に動きます
+				// 行コンテナの作成
 				const rowContainer = new g.E({
 					scene: scene,
 					x: 100, // 左端からの位置
@@ -173,7 +172,7 @@ function main() {
 				});
 				scene.append(rowContainer);
 
-				// --- 王冠の表示（1位タイ全員） ---
+				// 王冠の表示（1位タイ全員）
 				if (player.score === topScore && topScore > 0) {
 					const crown = new g.Label({
 						scene: scene,
@@ -186,7 +185,7 @@ function main() {
 					rowContainer.append(crown);
 				}
 
-				// --- 順位と名前のラベル ---
+				// 順位と名前のラベル
 				const rankLabel = new g.Label({
 					scene: scene,
 					text: `${displayRank}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
