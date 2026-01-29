@@ -14,10 +14,12 @@ function main() {
 		// レイヤー分け
 		const backgroundLayer = new g.E({ scene });
 		const gameLayer = new g.E({ scene });
-		const uiLayer = new g.E({ scene });
+		const scoreLayer = new g.E({ scene });
+		const resultLayer = new g.E({ scene });
 		scene.append(backgroundLayer);
 		scene.append(gameLayer);
-		scene.append(uiLayer);
+		scene.append(scoreLayer);
+		scene.append(resultLayer);
 
 		const font = new g.DynamicFont({
 			game: g.game,
@@ -61,7 +63,7 @@ function main() {
 				x: 10,
 				y: 10 + ((Object.keys(scores).length - 1) * 30)
 			});
-			uiLayer.append(label);
+			scoreLayer.append(label);
 			scoreLabels[pid] = label;
 		};
 
@@ -105,19 +107,22 @@ function main() {
 
 		const showTitle = () => {
 			gameState = "title";
-			uiLayer.children?.slice().forEach(c => c.destroy());
+			resultLayer.children?.slice().forEach(c => c.destroy());
 			const startBtn = createButton("START", 200, "#2ecc71", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
-			uiLayer.append(startBtn);
+			resultLayer.append(startBtn);
 		};
 
 		const startGame = () => {
 			gameState = "playing";
-			uiLayer.children?.slice().forEach(c => c.destroy());
+			resultLayer.children?.slice().forEach(c => c.destroy());
 			Object.keys(scores).forEach(pid => {
 				scores[pid] = 0;
-				registerPlayer(pid); // スコアラベル再生成
+				if (scoreLabels[pid] !== undefined) {
+					scoreLabels[pid].text = `Player ${pid}: 0`;
+					scoreLabels[pid].invalidate();
+				}
 			});
 
 			scene.setTimeout(() => {
@@ -132,7 +137,7 @@ function main() {
 			const resultBg = new g.FilledRect({
 				scene, cssColor: "black", opacity: 0.7, width: g.game.width, height: g.game.height
 			});
-			uiLayer.append(resultBg);
+			resultLayer.append(resultBg);
 
 			// "結果発表" タイトルの表示
 			const resultTitle = new g.Label({
@@ -144,7 +149,7 @@ function main() {
 				x: (g.game.width - 240) / 2, // 中央寄せ
 				y: 50
 			});
-			uiLayer.append(resultTitle);
+			resultLayer.append(resultTitle);
 
 			const ranking = Object.keys(scores)
 				.map(pid => ({ id: pid, score: scores[pid] }))
@@ -169,7 +174,7 @@ function main() {
 					width: g.game.width - 200,
 					height: 40
 				});
-				uiLayer.append(rowContainer);
+				resultLayer.append(rowContainer);
 
 				// 王冠の表示（1位タイ全員）
 				if (player.score === topScore && topScore > 0) {
@@ -210,14 +215,14 @@ function main() {
 					x: 100,
 					y: 120
 				});
-				uiLayer.append(noPlayerLabel);
+				resultLayer.append(noPlayerLabel);
 			}
 
 			// リスタートボタン
 			const retryBtn = createButton("RETRY", 380, "#3498db", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
-			uiLayer.append(retryBtn);
+			resultLayer.append(retryBtn);
 
 		};
 
