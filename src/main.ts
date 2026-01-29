@@ -18,9 +18,10 @@ function main() {
 			size: 24
 		});
 
+		// 背景
 		const background = new g.Sprite({
 			scene: scene,
-			src: scene.asset.getImageById("background"), // game.jsonに登録した背景画像ID
+			src: scene.asset.getImageById("background"),
 			srcWidth: scene.asset.getImageById("background").width,
 			srcHeight: scene.asset.getImageById("background").height,
 			width: g.game.width,
@@ -38,7 +39,7 @@ function main() {
 				scene: scene,
 				text: `Player ${pid}: 0`,
 				font,
-				textColor: (pid === g.game.selfId) ? "green" : "black", // 自分は緑
+				textColor: pid === g.game.selfId ? "green" : "black", // 自分は緑
 				x: 10,
 				y: 10 + ((Object.keys(scores).length - 1) * 30)
 			});
@@ -80,7 +81,7 @@ function main() {
 						text: `${pid} ${point > 0 ? "+" : ""}${point}`,
 						font,
 						fontSize: 20,
-						textColor: ev.data.isPoison ? "red" : "cyan",
+						textColor: ev.data.isPoison ? "red" : pid === g.game.selfId ? "green" : "black",
 						x: target.x,
 						y: target.y
 					});
@@ -155,7 +156,7 @@ function main() {
 				text: "--- 結果発表 ---",
 				font,
 				fontSize: 40,
-				textColor: "yellow",
+				textColor: "white",
 				x: (g.game.width - 240) / 2, // 中央寄せ
 				y: 50
 			});
