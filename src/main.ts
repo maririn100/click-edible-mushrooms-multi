@@ -37,7 +37,7 @@ function main() {
 			const label = new g.Label({
 				scene: scene,
 				text: `Player ${pid}: 0`,
-				font: font,
+				font,
 				textColor: (pid === g.game.selfId) ? "green" : "black", // 自分は緑
 				x: 10,
 				y: 10 + ((Object.keys(scores).length - 1) * 30)
@@ -78,7 +78,7 @@ function main() {
 					const popup = new g.Label({
 						scene: scene,
 						text: `${pid} ${point > 0 ? "+" : ""}${point}`,
-						font: font,
+						font,
 						fontSize: 20,
 						textColor: ev.data.isPoison ? "red" : "cyan",
 						x: target.x,
@@ -152,7 +152,7 @@ function main() {
 			const title = new g.Label({
 				scene: scene,
 				text: "--- 結果発表 ---",
-				font: font,
+				font,
 				fontSize: 40,
 				textColor: "yellow",
 				x: (g.game.width - 240) / 2, // 中央寄せ
@@ -191,7 +191,7 @@ function main() {
 					const crown = new g.Label({
 						scene: scene,
 						text: "👑",
-						font: font,
+						font,
 						fontSize: 30,
 						x: -40, // コンテナの基準(x:0)よりさらに左に配置
 						y: -5   // 微調整した値
@@ -203,7 +203,7 @@ function main() {
 				const rankLabel = new g.Label({
 					scene: scene,
 					text: `${displayRank}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
-					font: font,
+					font,
 					fontSize: 30,
 					textColor: isMe ? "green" : "white",
 					x: 0, // コンテナ内での相対座標
@@ -216,7 +216,7 @@ function main() {
 				const noPlayerLabel = new g.Label({
 					scene: scene,
 					text: "参加者がいませんでした",
-					font: font,
+					font,
 					fontSize: 24,
 					textColor: "white",
 					x: 100,
