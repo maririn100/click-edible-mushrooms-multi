@@ -111,11 +111,13 @@ function main() {
 			const startBtn = createButton("START", 200, "#2ecc71", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
+			// TODO resultLayerにスタートボタンを配置して適切？
 			resultLayer.append(startBtn);
 		};
 
 		const startGame = () => {
 			gameState = "playing";
+			// TODO ここでスタートボタンを消している
 			resultLayer.children?.slice().forEach(c => c.destroy());
 			Object.keys(scores).forEach(pid => {
 				scores[pid] = 0;
@@ -124,7 +126,7 @@ function main() {
 					scoreLabels[pid].invalidate();
 				}
 			});
-
+			// 30秒経ったらゲーム終了
 			scene.setTimeout(() => {
 				finishGame();
 			}, 30000);
@@ -134,6 +136,7 @@ function main() {
 			gameState = "result";
 			gameLayer.children?.slice().forEach(c => c.destroy());
 			// 暗転背景
+			// TODO 暗転しすぎて真っ黒なので調整する
 			const resultBg = new g.FilledRect({
 				scene, cssColor: "black", opacity: 0.7, width: g.game.width, height: g.game.height
 			});
@@ -155,6 +158,7 @@ function main() {
 				.map(pid => ({ id: pid, score: scores[pid] }))
 				.sort((a, b) => b.score - a.score);
 			let displayRank = 1;
+			// TODO ここの処理確認
 			const topScore = ranking.length > 0 ? ranking[0].score : -Infinity;
 
 			ranking.forEach((player, index) => {
@@ -163,13 +167,12 @@ function main() {
 					displayRank = index + 1;
 				}
 
-				const isMe = (player.id === g.game.selfId);
 				const rowY = 120 + (index * 45);
 
 				// 行コンテナの作成
 				const rowContainer = new g.E({
 					scene,
-					x: 100, // 左端からの位置
+					x: 100,
 					y: rowY,
 					width: g.game.width - 200,
 					height: 40
@@ -182,29 +185,30 @@ function main() {
 					const crown = new g.Sprite({
 						scene,
 						src,
-						x: -45, // 位置を微調整（画像の幅に合わせて変えてください）
-						y: 3,  // テキストとの高さ調整
+						x: -45,
+						y: 3,
 						srcWidth: src.width,
 						srcHeight: src.height,
-						width: 32,  // 表示したい横幅
-						height: 32  // 表示したい縦幅
+						width: 32,
+						height: 32,
 					});
 					rowContainer.append(crown);
 				}
 
-				// 順位と名前のラベル
+				// 順位と名前
 				const rankLabel = new g.Label({
 					scene,
 					text: `${displayRank}位: Player ${player.id.substring(0, 4)} ... ${player.score}点`,
 					font,
 					fontSize: 30,
-					textColor: isMe ? "green" : "white",
-					x: 0, // コンテナ内での相対座標
-					y: 0
+					textColor: player.id === g.game.selfId ? "green" : "white",
+					x: 0,
+					y: 0,
 				});
 				rowContainer.append(rankLabel);
 			});
 
+			// 参加者がいない場合
 			if (ranking.length === 0) {
 				const noPlayerLabel = new g.Label({
 					scene,
@@ -218,7 +222,7 @@ function main() {
 				resultLayer.append(noPlayerLabel);
 			}
 
-			// リスタートボタン
+			// リトライボタン
 			const retryBtn = createButton("RETRY", 380, "#3498db", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
@@ -275,7 +279,7 @@ function main() {
 
 		scene.setInterval(() => createMushroom(), 1000);
 
-		// 初期化実行
+		// 初期化
 		initBackground();
 		showTitle();
 	});
