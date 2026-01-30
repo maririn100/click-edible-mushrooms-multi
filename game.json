@@ -9,30 +9,6 @@
 			"path": "script/main.js",
 			"global": true
 		},
-		"eat": {
-			"type": "audio",
-			"path": "audio/eat",
-			"systemId": "sound",
-			"duration": 1423,
-			"hint": {
-				"extensions": [
-					".aac",
-					".ogg"
-				]
-			}
-		},
-		"siren": {
-			"type": "audio",
-			"path": "audio/siren",
-			"systemId": "sound",
-			"duration": 2536,
-			"hint": {
-				"extensions": [
-					".aac",
-					".ogg"
-				]
-			}
-		},
 		"background": {
 			"type": "image",
 			"path": "image/background.png",
@@ -50,18 +26,6 @@
 			"path": "image/poisonousMushroom.png",
 			"width": 16,
 			"height": 16
-		},
-		"restart": {
-			"type": "image",
-			"path": "image/restart.png",
-			"width": 165,
-			"height": 50
-		},
-		"start": {
-			"type": "image",
-			"path": "image/start.png",
-			"width": 310,
-			"height": 110
 		},
 		"crown": {
 			"type": "image",

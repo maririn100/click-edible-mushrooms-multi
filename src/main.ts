@@ -44,7 +44,7 @@ function main() {
 			showTitle();
 		};
 
-		// ボタン作成処理
+		// ボタン作成
 		const createButton = (text: string, y: number, color: string, onClick: () => void, strokeColor?: string) => {
 			const width = 200;
 			const height = 60;
