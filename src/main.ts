@@ -45,12 +45,22 @@ function main() {
 		};
 
 		// ボタン作成処理
-		const createButton = (text: string, y: number, color: string, onClick: () => void) => {
+		const createButton = (text: string, y: number, color: string, onClick: () => void, strokeColor?: string) => {
 			const width = 200;
 			const height = 60;
 			const fontSize = 30;
+			const padding = 2; // 枠線の太さ
+
 			const btn = new g.E({ scene, x: (g.game.width - width) / 2, y, width, height, touchable: true });
-			btn.append(new g.FilledRect({ scene, cssColor: color, width, height }));
+			btn.append(new g.FilledRect({ scene, cssColor: strokeColor || "transparent", width, height }));
+			btn.append(new g.FilledRect({
+				scene,
+				cssColor: color,
+				x: strokeColor ? padding : 0,
+				y: strokeColor ? padding : 0,
+				width: strokeColor ? width - padding * 2 : width,
+				height: strokeColor ? height - padding * 2 : height
+			}));
 			btn.append(new g.Label({ scene, text, font, fontSize, textColor: "white", x: 55, y: 12 }));
 			btn.onPointDown.add(onClick);
 			return btn;
@@ -116,7 +126,7 @@ function main() {
 			resultLayer.children?.slice().forEach(c => c.destroy());
 			const startBtn = createButton("START", 330, "#2ecc71", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
-			});
+			}, "green");
 			resultLayer.append(startBtn);
 		};
 
@@ -242,9 +252,9 @@ function main() {
 			}
 
 			// リトライボタン
-			const retryBtn = createButton("RETRY", 550, "#3498db", () => {
+			const retryBtn = createButton("RETRY", 550, "black", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
-			});
+			}, "white");
 			resultLayer.append(retryBtn);
 
 		};
