@@ -46,9 +46,12 @@ function main() {
 
 		// ボタン作成処理
 		const createButton = (text: string, y: number, color: string, onClick: () => void) => {
-			const btn = new g.E({ scene, x: (g.game.width - 200) / 2, y, width: 200, height: 60, touchable: true });
-			btn.append(new g.FilledRect({ scene, cssColor: color, width: 200, height: 60 }));
-			btn.append(new g.Label({ scene, text, font, fontSize: 30, textColor: "white", x: 40, y: 12 }));
+			const width = 200;
+			const height = 60;
+			const fontSize = 30;
+			const btn = new g.E({ scene, x: (g.game.width - width) / 2, y, width, height, touchable: true });
+			btn.append(new g.FilledRect({ scene, cssColor: color, width, height }));
+			btn.append(new g.Label({ scene, text, font, fontSize, textColor: "white", x: 55, y: 12 }));
 			btn.onPointDown.add(onClick);
 			return btn;
 		};
@@ -111,7 +114,7 @@ function main() {
 		const showTitle = () => {
 			gameState = "title";
 			resultLayer.children?.slice().forEach(c => c.destroy());
-			const startBtn = createButton("START", 200, "#2ecc71", () => {
+			const startBtn = createButton("START", 330, "#2ecc71", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
 			resultLayer.append(startBtn);
@@ -162,7 +165,7 @@ function main() {
 			// "結果発表" タイトルの表示
 			const resultTitle = new g.Label({
 				scene,
-				text: "--- 結果発表 ---",
+				text: "-- 結果発表 --",
 				font,
 				fontSize: 40,
 				textColor: "white",
@@ -239,7 +242,7 @@ function main() {
 			}
 
 			// リトライボタン
-			const retryBtn = createButton("RETRY", 380, "#3498db", () => {
+			const retryBtn = createButton("RETRY", 550, "#3498db", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
 			resultLayer.append(retryBtn);
