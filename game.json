@@ -1,0 +1,41 @@
+{
+	"width": 1280,
+	"height": 720,
+	"fps": 30,
+	"main": "./script/main.js",
+	"assets": {
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		},
+		"background": {
+			"type": "image",
+			"path": "image/background.png",
+			"width": 640,
+			"height": 480
+		},
+		"edibleMushroom": {
+			"type": "image",
+			"path": "image/edibleMushroom.png",
+			"width": 16,
+			"height": 16
+		},
+		"poisonousMushroom": {
+			"type": "image",
+			"path": "image/poisonousMushroom.png",
+			"width": 16,
+			"height": 16
+		},
+		"crown": {
+			"type": "image",
+			"path": "image/crown.png",
+			"width": 800,
+			"height": 800
+		}
+	},
+	"environment": {
+		"sandbox-runtime": "3"
+	},
+	"globalScripts": []
+}
