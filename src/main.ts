@@ -10,6 +10,8 @@ function main() {
 		const scoreLabels: { [key: string]: g.Label } = {};
 		// 生成されたキノコの管理用
 		const mushroomMap: { [key: number]: g.E } = {};
+		// キノコタイマー保存用
+		let mushroomTimer: g.TimerIdentifier | undefined;
 
 		// レイヤー分け
 		const backgroundLayer = new g.E({ scene });
@@ -117,6 +119,16 @@ function main() {
 
 		const startGame = () => {
 			gameState = "playing";
+
+			// 既存のキノコタイマーがあれば停止
+			if (mushroomTimer !== undefined) {
+				scene.clearInterval(mushroomTimer);
+			}
+			// 新しくキノコタイマーを開始
+			mushroomTimer = scene.setInterval(() => {
+				createMushroom();
+			}, 1000);
+
 			// TODO ここでスタートボタンを消している
 			resultLayer.children?.slice().forEach(c => c.destroy());
 			Object.keys(scores).forEach(pid => {
@@ -134,6 +146,13 @@ function main() {
 
 		const finishGame = () => {
 			gameState = "result";
+
+			// キノコタイマーを止める
+			if (mushroomTimer !== undefined) {
+				scene.clearInterval(mushroomTimer);
+				mushroomTimer = undefined;
+			}
+
 			gameLayer.children?.slice().forEach(c => c.destroy());
 			// 暗転背景
 			// TODO 暗転しすぎて真っ黒なので調整する
@@ -276,8 +295,6 @@ function main() {
 		g.game.onJoin.add((ev) => {
 			registerPlayer(ev.player.id);
 		});
-
-		scene.setInterval(() => createMushroom(), 1000);
 
 		// 初期化
 		initBackground();
