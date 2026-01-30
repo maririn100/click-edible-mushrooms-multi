@@ -29,9 +29,8 @@ function main() {
 			size: 24
 		});
 
-		// 初期化
 		const init = () => {
-			// 背景
+			// ゲーム背景
 			const src = scene.asset.getImageById("background");
 			const bg = new g.Sprite({
 				scene,
@@ -115,7 +114,6 @@ function main() {
 			const startBtn = createButton("START", 200, "#2ecc71", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
 			});
-			// TODO resultLayerにスタートボタンを配置して適切？
 			resultLayer.append(startBtn);
 		};
 
@@ -131,7 +129,6 @@ function main() {
 				createMushroom();
 			}, 1000);
 
-			// TODO ここでスタートボタンを消している
 			resultLayer.children?.slice().forEach(c => c.destroy());
 			Object.keys(scores).forEach(pid => {
 				scores[pid] = 0;
@@ -178,7 +175,6 @@ function main() {
 				.map(pid => ({ id: pid, score: scores[pid] }))
 				.sort((a, b) => b.score - a.score);
 			let displayRank = 1;
-			// TODO ここの処理確認
 			const topScore = ranking.length > 0 ? ranking[0].score : -Infinity;
 
 			ranking.forEach((player, index) => {
@@ -297,7 +293,6 @@ function main() {
 			registerPlayer(ev.player.id);
 		});
 
-		// 初期化
 		init();
 	});
 
