@@ -29,8 +29,9 @@ function main() {
 			size: 24
 		});
 
-		// 背景
-		const initBackground = () => {
+		// 初期化
+		const init = () => {
+			// 背景
 			const src = scene.asset.getImageById("background");
 			const bg = new g.Sprite({
 				scene,
@@ -41,6 +42,7 @@ function main() {
 				height: g.game.height
 			});
 			backgroundLayer.append(bg);
+			showTitle();
 		};
 
 		// ボタン作成処理
@@ -154,10 +156,9 @@ function main() {
 			}
 
 			gameLayer.children?.slice().forEach(c => c.destroy());
-			// 暗転背景
-			// TODO 暗転しすぎて真っ黒なので調整する
+			// 結果発表時の背景
 			const resultBg = new g.FilledRect({
-				scene, cssColor: "black", opacity: 0.7, width: g.game.width, height: g.game.height
+				scene, cssColor: "black", width: g.game.width, height: g.game.height
 			});
 			resultLayer.append(resultBg);
 
@@ -297,8 +298,7 @@ function main() {
 		});
 
 		// 初期化
-		initBackground();
-		showTitle();
+		init();
 	});
 
 	g.game.pushScene(scene);
