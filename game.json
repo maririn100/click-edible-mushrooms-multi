@@ -32,6 +32,42 @@
 			"path": "image/crown.png",
 			"width": 800,
 			"height": 800
+		},
+		"correct": {
+			"type": "audio",
+			"path": "audio/correct",
+			"systemId": "sound",
+			"duration": 2586,
+			"hint": {
+				"extensions": [
+					".aac",
+					".ogg"
+				]
+			}
+		},
+		"incorrect": {
+			"type": "audio",
+			"path": "audio/incorrect",
+			"systemId": "sound",
+			"duration": 1686,
+			"hint": {
+				"extensions": [
+					".aac",
+					".ogg"
+				]
+			}
+		},
+		"result": {
+			"type": "audio",
+			"path": "audio/result",
+			"systemId": "sound",
+			"duration": 2198,
+			"hint": {
+				"extensions": [
+					".aac",
+					".ogg"
+				]
+			}
 		}
 	},
 	"environment": {
