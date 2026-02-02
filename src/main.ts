@@ -265,6 +265,8 @@ function main() {
 		scene.onMessage.add((ev) => {
 			if (ev.data === undefined) return;
 			if (ev.data.type === "req_start") {
+				const buttonSE = scene.asset.getAudioById("se_button");
+				buttonSE.play();
 				startGame();
 			} else if (ev.data.type === "hit" && ev.data.playerId !== undefined && gameState === "playing") {
 				const pid = ev.data.playerId;
