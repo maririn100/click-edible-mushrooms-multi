@@ -1,11 +1,8 @@
 # click-edible-mushrooms-multi
 
 **click-edible-mushrooms-multi**はTypeScriptでAkashicのゲームを作成したサンプルプロジェクトです。
-マウスで食べられるキノコのみをクリックし、スコアアップを目指すマルチプレイゲームです。
-
-## ゲームで遊ぶ方法
-
-ブラウザで `https://maririn100.github.io/click-edible-mushrooms-multi/game/index.html` にアクセスするとゲームで遊べます。
+マウスで食べられるキノコ（茶色）のみをクリックし、スコアアップを目指すマルチプレイゲームです。
+毒キノコ（赤色）をクリックしてしまった場合、スコアが減点されます。
 
 ## 利用方法
 
@@ -88,5 +85,3 @@ npm run build
 ```sh
 npm test
 ```
-
-テストコードのサンプルとして `spec/testSpec.js` を用意していますので参考にしてテストコードを記述して下さい。
