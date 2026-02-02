@@ -1,7 +1,7 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown", "correct", "incorrect", "result"]
+		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown", "se_correct", "se_incorrect", "se_result", "se_button"]
 	});
 
 	scene.onLoad.add(() => {
@@ -257,7 +257,7 @@ function main() {
 			}, "white");
 			resultLayer.append(retryBtn);
 
-			const resultSE = scene.asset.getAudioById("result");
+			const resultSE = scene.asset.getAudioById("se_result");
 			resultSE.play();
 		};
 
@@ -298,7 +298,7 @@ function main() {
 						y: target.y
 					});
 					gameLayer.append(popup);
-					const scoreSE = scene.asset.getAudioById(ev.data.isPoison ? "incorrect" : "correct");
+					const scoreSE = scene.asset.getAudioById(ev.data.isPoison ? "se_incorrect" : "se_correct");
 					scoreSE.play();
 					scene.setTimeout(() => { if (popup.destroyed() === false) popup.destroy(); }, 500);
 				}
