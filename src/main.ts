@@ -1,7 +1,7 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown"]
+		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown", "correct", "incorrect", "result"]
 	});
 
 	scene.onLoad.add(() => {
@@ -257,6 +257,8 @@ function main() {
 			}, "white");
 			resultLayer.append(retryBtn);
 
+			const resultSE = scene.asset.getAudioById("result");
+			resultSE.play();
 		};
 
 		// メッセージ受信
@@ -296,6 +298,8 @@ function main() {
 						y: target.y
 					});
 					gameLayer.append(popup);
+					const scoreSE = scene.asset.getAudioById(ev.data.isPoison ? "incorrect" : "correct");
+					scoreSE.play();
 					scene.setTimeout(() => { if (popup.destroyed() === false) popup.destroy(); }, 500);
 				}
 			}
