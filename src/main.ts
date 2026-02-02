@@ -67,9 +67,11 @@ function main() {
 		};
 
 		// プレイヤー登録（スコアラベル作成）
-		const registerPlayer = (pid: string) => {
-			// 既に登録済み、また4人以上の場合は何もしない
-			if (scores[pid] !== undefined || Object.keys(scores).length >= 4) return;
+		const registerPlayer = (pid: string): boolean => {
+			// 既に登録済みの場合は、この後の処理をせずに参加OKを返す
+			if (scores[pid] !== undefined) return true;
+			// 5人目以降は参加NGなので、この後の処理はせずに参加NGを返す
+			if (Object.keys(scores).length >= 4) return false;
 			scores[pid] = 0;
 			const label = new g.Label({
 				scene,
@@ -81,6 +83,7 @@ function main() {
 			});
 			scoreLayer.append(label);
 			scoreLabels[pid] = label;
+			return true;
 		};
 
 		// キノコ生成
@@ -270,12 +273,7 @@ function main() {
 				startGame();
 			} else if (ev.data.type === "hit" && ev.data.playerId !== undefined && gameState === "playing") {
 				const pid = ev.data.playerId;
-
-				// もしプレイヤーがいなければ登録
-				if (scores[pid] === undefined) {
-					registerPlayer(pid);
-				}
-
+				if (registerPlayer(pid) === false) return;
 				const target = mushroomMap[ev.data.mushroomId];
 				if (target !== undefined && target.destroyed() === false) {
 					target.destroy();
