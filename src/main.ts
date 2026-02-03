@@ -61,7 +61,17 @@ function main() {
 				width: strokeColor ? width - padding * 2 : width,
 				height: strokeColor ? height - padding * 2 : height
 			}));
-			btn.append(new g.Label({ scene, text, font, fontSize, textColor: "white", x: 55, y: 12 }));
+			const label = new g.Label({
+				scene,
+				text,
+				font,
+				fontSize,
+				textColor: "white",
+				x: 0,
+				y: (height - fontSize) / 2 - 3,
+			});
+			label.x = (width - label.width) / 2;
+			btn.append(label);
 			btn.onPointDown.add(onClick);
 			return btn;
 		};
@@ -160,7 +170,7 @@ function main() {
 			const normalBtn = createButton("NORMAL", 330, "#3498db", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start", interval: 1000 }));
 			}, "blue");
-			const hardBtn = createButton("HARD", 410, "#e74c3c", () => {
+			const hardBtn = createButton("HARD", 410, "#ef5724", () => {
 				g.game.raiseEvent(new g.MessageEvent({ type: "req_start", interval: 500 }));
 			}, "red");
 			resultLayer.append(easyBtn);
