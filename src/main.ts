@@ -61,7 +61,17 @@ function main() {
 				width: strokeColor ? width - padding * 2 : width,
 				height: strokeColor ? height - padding * 2 : height
 			}));
-			btn.append(new g.Label({ scene, text, font, fontSize, textColor: "white", x: 55, y: 12 }));
+			const label = new g.Label({
+				scene,
+				text,
+				font,
+				fontSize,
+				textColor: "white",
+				x: 0,
+				y: (height - fontSize) / 2 - 3,
+			});
+			label.x = (width - label.width) / 2;
+			btn.append(label);
 			btn.onPointDown.add(onClick);
 			return btn;
 		};
@@ -139,16 +149,36 @@ function main() {
 			});
 		};
 
+		const resetScore = () => {
+			Object.keys(scores).forEach(pid => {
+				scores[pid] = 0;
+				if (scoreLabels[pid] !== undefined) {
+					scoreLabels[pid].text = `Player ${pid}: 0`;
+					scoreLabels[pid].invalidate();
+				}
+			});
+		};
+
 		const showTitle = () => {
 			gameState = "title";
 			resultLayer.children?.slice().forEach(c => c.destroy());
-			const startBtn = createButton("START", 330, "#2ecc71", () => {
-				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
+			resetScore();
+
+			const easyBtn = createButton("EASY", 250, "#2ecc71", () => {
+				g.game.raiseEvent(new g.MessageEvent({ type: "req_start", interval: 1500 }));
 			}, "green");
-			resultLayer.append(startBtn);
+			const normalBtn = createButton("NORMAL", 330, "#3498db", () => {
+				g.game.raiseEvent(new g.MessageEvent({ type: "req_start", interval: 1000 }));
+			}, "blue");
+			const hardBtn = createButton("HARD", 410, "#ef5724", () => {
+				g.game.raiseEvent(new g.MessageEvent({ type: "req_start", interval: 500 }));
+			}, "red");
+			resultLayer.append(easyBtn);
+			resultLayer.append(normalBtn);
+			resultLayer.append(hardBtn);
 		};
 
-		const startGame = () => {
+		const startGame = (spawnInterval: number) => {
 			gameState = "playing";
 
 			// 既存のキノコタイマーがあれば停止
@@ -158,16 +188,10 @@ function main() {
 			// 新しくキノコタイマーを開始
 			mushroomTimer = scene.setInterval(() => {
 				createMushroom();
-			}, 1000);
+			}, spawnInterval);
 
 			resultLayer.children?.slice().forEach(c => c.destroy());
-			Object.keys(scores).forEach(pid => {
-				scores[pid] = 0;
-				if (scoreLabels[pid] !== undefined) {
-					scoreLabels[pid].text = `Player ${pid}: 0`;
-					scoreLabels[pid].invalidate();
-				}
-			});
+
 			// 30秒経ったらゲーム終了
 			scene.setTimeout(() => {
 				finishGame();
@@ -271,7 +295,7 @@ function main() {
 
 			// リトライボタン
 			const retryBtn = createButton("RETRY", 550, "black", () => {
-				g.game.raiseEvent(new g.MessageEvent({ type: "req_start" }));
+				g.game.raiseEvent(new g.MessageEvent({ type: "req_title" }));
 			}, "white");
 			resultLayer.append(retryBtn);
 
@@ -289,11 +313,16 @@ function main() {
 		// メッセージ受信
 		scene.onMessage.add((ev) => {
 			if (ev.data === undefined) return;
+			const buttonSE = scene.asset.getAudioById("se_button");
 			if (ev.data.type === "req_start") {
-				const buttonSE = scene.asset.getAudioById("se_button");
 				buttonSE.play();
-				startGame();
-			} else if (ev.data.type === "hit" && ev.data.playerId !== undefined && gameState === "playing") {
+				const interval = ev.data.interval || 1000;
+				startGame(interval);
+			} else if (ev.data.type === "req_title") {
+				buttonSE.play();
+				showTitle();
+			}
+			else if (ev.data.type === "hit" && ev.data.playerId !== undefined && gameState === "playing") {
 				const pid = ev.data.playerId;
 				if (registerPlayer(pid) === false) return;
 				const target = mushroomMap[ev.data.mushroomId];
