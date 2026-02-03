@@ -69,9 +69,21 @@
 				]
 			}
 		},
-		"se_result": {
+		"se_lose": {
 			"type": "audio",
-			"path": "audio/se_result",
+			"path": "audio/se_lose",
+			"systemId": "sound",
+			"duration": 2481,
+			"hint": {
+				"extensions": [
+					".aac",
+					".ogg"
+				]
+			}
+		},
+		"se_win": {
+			"type": "audio",
+			"path": "audio/se_win",
 			"systemId": "sound",
 			"duration": 2198,
 			"hint": {
