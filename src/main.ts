@@ -117,11 +117,26 @@ function main() {
 			});
 			gameLayer.append(mushroom);
 			scene.setTimeout(() => {
-				if (mushroom.destroyed() === false) {
-					mushroom.destroy();
+				const target = mushroomMap[mushroom.id];
+				if (target !== undefined && target.destroyed() === false) {
 					delete mushroomMap[mushroom.id];
+					fadeOutAndDestroy(target);
 				}
 			}, 3000);
+		};
+
+		const fadeOutAndDestroy = (target: g.E) => {
+			if (target === undefined || target.destroyed() === true) return;
+
+			target.touchable = false;
+			target.onUpdate.add(() => {
+				target.opacity -= 0.1;
+				target.modified();
+
+				if (target.opacity <= 0) {
+					target.destroy();
+				}
+			});
 		};
 
 		const showTitle = () => {
@@ -276,8 +291,8 @@ function main() {
 				if (registerPlayer(pid) === false) return;
 				const target = mushroomMap[ev.data.mushroomId];
 				if (target !== undefined && target.destroyed() === false) {
-					target.destroy();
 					delete mushroomMap[ev.data.mushroomId];
+					fadeOutAndDestroy(target);
 
 					// スコア加算・減算
 					const point = ev.data.isPoison ? -50 : 10;
