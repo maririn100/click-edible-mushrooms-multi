@@ -1,7 +1,7 @@
 function main() {
 	const scene = new g.Scene({
 		game: g.game,
-		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown", "se_correct", "se_incorrect", "se_result", "se_button"]
+		assetIds: ["background", "edibleMushroom", "poisonousMushroom", "crown", "se_correct", "se_incorrect", "se_win", "se_lose", "se_button"]
 	});
 
 	scene.onLoad.add(() => {
@@ -275,8 +275,15 @@ function main() {
 			}, "white");
 			resultLayer.append(retryBtn);
 
-			const resultSE = scene.asset.getAudioById("se_result");
-			resultSE.play();
+			const myScore = scores[g.game.selfId] || 0;
+			const isSelfWinner = (myScore === topScore);
+			const winSE = scene.asset.getAudioById("se_win");
+			const loseSE = scene.asset.getAudioById("se_lose");
+			if (isSelfWinner === true) {
+				winSE.play();
+			} else {
+				loseSE.play();
+			}
 		};
 
 		// メッセージ受信
